@@ -88,7 +88,8 @@ function Header() {
   // All links
   const links = [
     { name: "FAQ", path: "/faq" },
-    { name: "Resources", path: "/resources" },
+    { name: "Claim", path: '/claim' }
+    //{ name: "Resources", path: "/resources" },
   ];
 
   return (

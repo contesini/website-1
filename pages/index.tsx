@@ -10,14 +10,14 @@ import type { ReactElement } from "react";
 export default function Home(): ReactElement {
   // Quicklinks to render
   const quicklinks: Record<string, string>[] = [
-    { name: "OpenSea", url: "https://opensea.io/collection/lootproject" },
+    { name: "OpenSea (for brazilians)", url: "https://opensea.io/collection/loot-for-brazilians" },
     {
-      name: "Twitter",
+      name: "Twitter Official Project",
       url: "https://twitter.com/lootproject",
     },
     {
-      name: "Contract",
-      url: "https://etherscan.io/address/0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7",
+      name: "Contract (for brazilians)",
+      url: "https://polygonscan.com/address/0x6af672c08d2599393ce774078674a5faf35b500d",
     },
   ];
 
@@ -73,7 +73,7 @@ export default function Home(): ReactElement {
           {getRandomThreeBags().map(({ id, attributes }, i) => (
             // For each loot bag, render item and link to OpenSea
             <a
-              href={`https://opensea.io/assets/0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7/${id}`}
+              href={`https://opensea.io/assets/matic/0x6af672c08d2599393ce774078674a5faf35b500d/${id}`}
               target="_blank"
               rel="noopener noreferrer"
               key={i}
