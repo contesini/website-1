@@ -9,6 +9,62 @@ import "./Base64.sol";
 
 contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
 
+    // modifier: Check if number of tokens matches
+    modifier validateTokenDistribution(address[] memory _contributors) {
+        require(numberOfContributorTokens + numberOfOwnerTokens + numberOfPublicTokens == totalNumberOfTokens, "Incorrect token distribution!");
+        require(numberOfContributorTokens % _contributors.length == 0, "Bad Contributor token division!");
+        _;
+    }
+
+    // modifier: Check if msg.sender is one of the contributors
+    modifier onlyContributors {
+        bool isContributor = false;
+        for (uint256 i = 0; i < contributors.length; i++) {
+            if (msg.sender == contributors[i]) {
+                isContributor = true;
+                break;
+            }
+        }
+        require(isContributor, "Only contributors allowed!");
+        _;
+    }
+
+    // modifier: Check if contributor already claimed it's tokens
+    modifier checkContributorClaims {
+        require(contributorClaims[msg.sender] <= numberOfContributorTokens / contributors.length, "Tokens already claimed!");
+        _;
+    }
+
+    // modifier: Check if msg.sender is the contributor or owner
+    modifier ownerOrContributor {
+        bool isOwnerOrContributor = false;
+        if (msg.sender == owner) {
+            isOwnerOrContributor = true;
+        } else {
+            for (uint256 i = 0; i < contributors.length; i++) {
+                if (msg.sender == contributors[i]) {
+                    isOwnerOrContributor = true;
+                    break;
+                }
+            }
+        }
+        require(isOwnerOrContributor, "Owner or contributors allowed!");
+        _;
+    }
+
+    // Contributor's claims
+    mapping(address => uint256) public contributorClaims;
+    
+    // Contributor array
+    address[] public contributors;
+
+    // Total number of tokens
+    uint256 public totalNumberOfTokens = 8000;
+
+    // Token distribution
+    uint256 public numberOfPublicTokens = 7777;
+    uint256 public numberOfOwnerTokens = 223;
+    uint256 public numberOfContributorTokens = 0;
 
     // Structure for the item category
     struct Category {
@@ -39,7 +95,16 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     Suffix private rolesSuffixes;
     Suffix private drinkSuffixes;
 
-    constructor() ERC721("Loot (from Brazil)", "LOOT-HUE-BR") Ownable() {
+    constructor(address[] memory _contributors) 
+        validateTokenDistribution(_contributors) 
+        ERC721("Loot (from Brazil)", "LOOT-HUE-BR") 
+        Ownable() 
+    {
+        // Registering contributors
+        for (uint256 i = 0; i < _contributors.length; i++) {
+            contributors.push(_contributors[i]);
+        }
+
         // ------------ITEMS---------------- //
         // Initialize transportation (common, rare, epic)
         transportation = Category({
@@ -123,7 +188,6 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     }
 
     //<OLD CODE STRUCTURE>//
-
 //     string[] private transport = [
 //         "charrete",
 //         "jumento",
@@ -288,59 +352,60 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
 
 //     string[] private drinkSuffixe = ["adulteradx", "", "", ""];
 
+    
+
+//     function getSuffixes(uint256 tokenId, string[] memory sourceArray) public pure returns (string memory) {
+//         uint256 rand = random(string(abi.encodePacked(toString(tokenId))));
+//         return sourceArray[rand % sourceArray.length];
+//     }
+    
+//     function random(string memory input) internal pure returns (uint256) {
+//         return uint256(keccak256(abi.encodePacked(input)));
+//     }
+    
+//     function getTransport(uint256 tokenId) public view returns (string memory) {
+//         string memory suffixeA = getSuffixes(tokenId, transportASuffixes);
+//         string memory suffixeB = getSuffixes(tokenId, transportBSuffixes);
+//         return string(abi.encodePacked(pluck(tokenId, "TRANSPORT", transport), " ", suffixeA, suffixeB));
+//     }
+    
+//     function getProfession(uint256 tokenId) public view returns (string memory) {
+//         string memory suffixe = getSuffixes(tokenId, professionSuffixes);
+//         return string(abi.encodePacked(pluck(tokenId, "PROFESSION", profession), " ", suffixe));
+//     }
+    
+//     function getRoles(uint256 tokenId) public view returns (string memory) {
+//         string memory suffixe = getSuffixes(tokenId, rolesSuffixes);
+//         return string(abi.encodePacked(pluck(tokenId, "ROLE", roles), " ", suffixe));
+//     }
+    
+//     function getDrink(uint256 tokenId) public view returns (string memory) {
+//         string memory suffixe = getSuffixes(tokenId, drinkSuffixe);
+//         return string(abi.encodePacked(pluck(tokenId, "DRINK", drink), " ", suffixe));
+//     }
+
+//     function getAccessories(uint256 tokenId) public view returns (string memory) {
+//         return pluck(tokenId, "ACESSORIES", accessories);
+//     }
+    
+//     function getAppearance(uint256 tokenId) internal view returns (string memory) {
+//         return pluck(tokenId, "APPEARANCE", appearance);
+//     }
+    
+//     function getTitle(uint256 tokenId) internal view returns (string memory) {
+//         return pluck(tokenId, "TITLE", title);
+//     }
+
+//     function getPet(uint256 tokenId) internal view returns (string memory) {
+//         return pluck(tokenId, "PET", pet);
+//     }
+    
+//     function pluck(uint256 tokenId, string memory keyPrefix, string[] memory sourceArray) internal pure returns (string memory) {
+//         uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
+//         string memory output = sourceArray[rand % sourceArray.length];
+//         return output;
+//     }
     //</OLD CODE STRUCTURE>// 
-
-    function getSuffixes(uint256 tokenId, string[] memory sourceArray) public pure returns (string memory) {
-        uint256 rand = random(string(abi.encodePacked(toString(tokenId))));
-        return sourceArray[rand % sourceArray.length];
-    }
-    
-    function random(string memory input) internal pure returns (uint256) {
-        return uint256(keccak256(abi.encodePacked(input)));
-    }
-    
-    function getTransport(uint256 tokenId) public view returns (string memory) {
-        string memory suffixeA = getSuffixes(tokenId, transportASuffixes);
-        string memory suffixeB = getSuffixes(tokenId, transportBSuffixes);
-        return string(abi.encodePacked(pluck(tokenId, "TRANSPORT", transport), " ", suffixeA, suffixeB));
-    }
-    
-    function getProfession(uint256 tokenId) public view returns (string memory) {
-        string memory suffixe = getSuffixes(tokenId, professionSuffixes);
-        return string(abi.encodePacked(pluck(tokenId, "PROFESSION", profession), " ", suffixe));
-    }
-    
-    function getRoles(uint256 tokenId) public view returns (string memory) {
-        string memory suffixe = getSuffixes(tokenId, rolesSuffixes);
-        return string(abi.encodePacked(pluck(tokenId, "ROLE", roles), " ", suffixe));
-    }
-    
-    function getDrink(uint256 tokenId) public view returns (string memory) {
-        string memory suffixe = getSuffixes(tokenId, drinkSuffixe);
-        return string(abi.encodePacked(pluck(tokenId, "DRINK", drink), " ", suffixe));
-    }
-
-    function getAccessories(uint256 tokenId) public view returns (string memory) {
-        return pluck(tokenId, "ACESSORIES", accessories);
-    }
-    
-    function getAppearance(uint256 tokenId) internal view returns (string memory) {
-        return pluck(tokenId, "APPEARANCE", appearance);
-    }
-    
-    function getTitle(uint256 tokenId) internal view returns (string memory) {
-        return pluck(tokenId, "TITLE", title);
-    }
-
-    function getPet(uint256 tokenId) internal view returns (string memory) {
-        return pluck(tokenId, "PET", pet);
-    }
-    
-    function pluck(uint256 tokenId, string memory keyPrefix, string[] memory sourceArray) internal pure returns (string memory) {
-        uint256 rand = random(string(abi.encodePacked(keyPrefix, toString(tokenId))));
-        string memory output = sourceArray[rand % sourceArray.length];
-        return output;
-    }
 
     function tokenURI(uint256 tokenId) override public view returns (string memory) {
         string[17] memory parts;
@@ -382,26 +447,32 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
         for (uint256 i = 1; i < parts.length; i++) {
             outputBytes = abi.encodePacked(outputBytes, parts[i]);
         }
-        string memory output = string(outputBytes);
         
-        string memory json = Base64.encode(bytes(string(abi.encodePacked(
+        string memory json = Base64.encode(abi.encodePacked(
             "{'name': 'Bag #", 
             toString(tokenId), 
             ", 'description': 'A Brazilian meme version of Loot. We love loot <3', 'image': 'data:image/svg+xml;base64,", 
-            Base64.encode(bytes(output)), "'}"))));
-        output = string(abi.encodePacked("data:application/json;base64,", json));
+            Base64.encode(bytes(outputBytes)), "'}"));
+        string memory output = string(abi.encodePacked("data:application/json;base64,", json));
 
         return output;
     }
 
     function claim(uint256 tokenId) public nonReentrant {
-        require(tokenId > 0 && tokenId < 7778, "Token ID invalid");
+        require(tokenId > 0 && tokenId <= numberOfPublicTokens, "Token ID invalid");
         _safeMint(_msgSender(), tokenId);
     }
     
     function ownerClaim(uint256 tokenId) public nonReentrant onlyOwner {
-        require(tokenId > 7777 && tokenId < 8001, "Token ID invalid");
+        require(tokenId > numberOfPublicTokens && tokenId <= numberOfPublicTokens+numberOfOwnerTokens, "Token ID invalid");
         _safeMint(owner(), tokenId);
+    }
+
+    function contributorClaim(uint256 tokenId) public nonReentrant onlyContributors checkContributorClaims {
+        require(tokenId > numberOfOwnerTokens+numberOfContributorTokens 
+        && tokenId <= numberOfPublicTokens+numberOfOwnerTokens+numberOfContributorTokens, "Token ID invalid");
+        _safeMint(_msgSender(), tokenId);
+        contributorClaims[_msgSender()] += 1;
     }
     
     function toString(uint256 value) internal pure returns (string memory) {
