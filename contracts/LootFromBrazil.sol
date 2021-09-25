@@ -67,35 +67,6 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     uint256 public numberOfOwnerTokens = 223;
     uint256 public numberOfContributorTokens = 0;
 
-    // Structure for the item category
-    struct Category {
-        string[] common;
-        string[] rare;
-        string[] epic;
-    }
-
-    // Structure for the item suffix
-    struct Suffix {
-        string[] rare;
-        string[] epic;
-    }
-
-    // Categories
-    Category private transportation;
-    Category private profession;
-    Category private roles;
-    Category private drink;
-    Category private accessories;
-    Category private appearance;
-    Category private title;
-    Category private pet;
-
-    // Suffixes
-    Suffix private transportASuffixes;
-    Suffix private transportBSuffixes;
-    Suffix private rolesSuffixes;
-    Suffix private drinkSuffixes;
-
     constructor(address[] memory _contributors) 
         validateTokenDistribution(_contributors) 
         ERC721("Loot (from Brazil)", "LOOT-HUE-BR") 
