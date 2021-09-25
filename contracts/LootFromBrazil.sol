@@ -260,11 +260,13 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
 //         "chic",
 //         "vagabunda"
 //     ];
+    
+
+//     string[] private professionSuffixes = ["corrupto", "", "", ""];
+
+//     string[] private drinkSuffixe = ["adulteradx", "", "", ""];
+
     //</OLD CODE STRUCTURE>// 
-
-    string[] private professionSuffixes = ["corrupto", "", "", ""];
-
-    string[] private drinkSuffixe = ["adulteradx", "", "", ""];
 
     function getSuffixes(uint256 tokenId, string[] memory sourceArray) public pure returns (string memory) {
         uint256 rand = random(string(abi.encodePacked(toString(tokenId))));
