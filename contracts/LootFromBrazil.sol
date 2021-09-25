@@ -109,55 +109,55 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
         // Initialize transportation (common, rare, epic)
         transportation = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Itinialize profession (common, rare, epic)
         profession = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Initialize roles
         roles = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Initialize drink
         drink = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Initialize accessories
         accessories = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Initialize appearance
         appearance = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
         // Initialize title
         title = Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
         // Initialize pet
         pet= Category({
             common: [],
-            rate: [],
+            rare: [],
             epic: []
         });
 
