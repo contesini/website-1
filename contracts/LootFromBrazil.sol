@@ -39,7 +39,7 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     Suffix private rolesSuffixes;
     Suffix private drinkSuffixes;
 
-    constructor() {
+    constructor() ERC721("Loot (from Brazil)", "LOOT-HUE-BR") Ownable() {
         // ------------ITEMS---------------- //
         // Initialize transportation (common, rare, epic)
         transportation.common = [];
@@ -396,6 +396,4 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
         }
         return string(buffer);
     }
-    
-    constructor() ERC721("Loot (for Brazilians)", "LOOT-HUE-BRL") Ownable() {}
 }
