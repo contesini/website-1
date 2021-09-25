@@ -4,11 +4,9 @@ import Layout from "@components/Layout"; // Layout wrapper
 import type { ReactElement } from "react";
 
 export default function Claim(): ReactElement {
-  return (
-    <Layout>
-      <div>
-        
-      </div>
-    </Layout>
-  );
+    return (
+        <Layout>
+            <div></div>
+        </Layout>
+    );
 }
