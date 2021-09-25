@@ -42,62 +42,84 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     constructor() ERC721("Loot (from Brazil)", "LOOT-HUE-BR") Ownable() {
         // ------------ITEMS---------------- //
         // Initialize transportation (common, rare, epic)
-        transportation.common = [];
-        transportation.rare = [];
-        transportation.epic = [];
+        transportation = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Itinialize profession (common, rare, epic)
-        profession.common = [];
-        profession.rare = [];
-        profession.epic = [];
+        profession = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Initialize roles
-        roles.common = [];
-        roles.rare = [];
-        roles.epic = [];
+        roles = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Initialize drink
-        drink.common = [];
-        drink.rare = [];
-        drink.epic = [];
+        drink = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Initialize accessories
-        accessories.common = [];
-        accessories.rare = [];
-        accessories.epic = [];
+        accessories = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Initialize appearance
-        appearance.common = [];
-        appearance.rare = [];
-        appearance.epic = [];
-
+        appearance = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
         // Initialize title
-        title.common = [];
-        title.rare = [];
-        title.epic = [];
+        title = Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // Initialize pet
-        pet.common = [];
-        pet.rare = [];
-        pet.epic = [];
+        pet= Category({
+            common: [],
+            rate: [],
+            epic: []
+        });
 
         // ------------SUFFIXES-------------- //
-
         // Initialize transportASuffixes
-        transportASuffixes.rare = [];
-        transportASuffixes.epic = [];
+        transportASuffixes = Suffix({
+            rare: [],
+            epic: []
+        });
 
         // Initialize transportBSuffixes
-        transportBSuffixes.rare = [];
-        transportBSuffixes.epic = [];
+        transportBSuffixes = Suffix({
+            rare: [],
+            epic: []
+        });
 
         // Initialize rolesSuffixes
-        rolesSuffixes.rare = [];
-        rolesSuffixes.epic = [];
+        rolesSuffixes = Suffix({
+            rare: [],
+            epic: []
+        });
 
         // Initialize drinkSuffixes
-        drinkSuffixes.rare = [];
-        drinkSuffixes.epic = [];
+        drinkSuffixes = Suffix({
+            rare: [],
+            epic: []
+        });
     }
 
     //<OLD CODE STRUCTURE>//
@@ -356,10 +378,17 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
 
         parts[16] = "</text></svg>";
 
-        string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8]));
-        output = string(abi.encodePacked(output, parts[9], parts[10], parts[11], parts[12], parts[13], parts[14], parts[15], parts[16]));
+        bytes32 memory outputBytes = abi.encodePacked(parts[0]);
+        for (uint256 i = 1; i < parts.length; i++) {
+            outputBytes = abi.encodePacked(outputBytes, parts[i]);
+        }
+        string memory output = string(outputBytes);
         
-        string memory json = Base64.encode(bytes(string(abi.encodePacked("{'name': 'Bag #", toString(tokenId), ", 'description': 'A Brazilian meme version of Loot. We love loot <3', 'image': 'data:image/svg+xml;base64,", Base64.encode(bytes(output)), "'}"))));
+        string memory json = Base64.encode(bytes(string(abi.encodePacked(
+            "{'name': 'Bag #", 
+            toString(tokenId), 
+            ", 'description': 'A Brazilian meme version of Loot. We love loot <3', 'image': 'data:image/svg+xml;base64,", 
+            Base64.encode(bytes(output)), "'}"))));
         output = string(abi.encodePacked("data:application/json;base64,", json));
 
         return output;
