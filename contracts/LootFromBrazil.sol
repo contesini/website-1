@@ -8,7 +8,7 @@ import "./Base64.sol";
 import "./Categories.sol";
 
 
-contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
+contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable, Categories {
 
     // modifier: Check if number of tokens matches
     modifier validateTokenDistribution(address[] memory _contributors) {
