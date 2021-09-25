@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
+import "./Categories.sol";
 
 
 contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
@@ -98,93 +99,13 @@ contract LootFromBrazil is ERC721Enumerable, ReentrancyGuard, Ownable {
     constructor(address[] memory _contributors) 
         validateTokenDistribution(_contributors) 
         ERC721("Loot (from Brazil)", "LOOT-HUE-BR") 
-        Ownable() 
+        Ownable()
+        Categories()
     {
         // Registering contributors
         for (uint256 i = 0; i < _contributors.length; i++) {
             contributors.push(_contributors[i]);
         }
-
-        // ------------ITEMS---------------- //
-        // Initialize transportation (common, rare, epic)
-        transportation = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Itinialize profession (common, rare, epic)
-        profession = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Initialize roles
-        roles = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Initialize drink
-        drink = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Initialize accessories
-        accessories = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Initialize appearance
-        appearance = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-        // Initialize title
-        title = Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // Initialize pet
-        pet= Category({
-            common: [],
-            rare: [],
-            epic: []
-        });
-
-        // ------------SUFFIXES-------------- //
-        // Initialize transportASuffixes
-        transportASuffixes = Suffix({
-            rare: [],
-            epic: []
-        });
-
-        // Initialize transportBSuffixes
-        transportBSuffixes = Suffix({
-            rare: [],
-            epic: []
-        });
-
-        // Initialize rolesSuffixes
-        rolesSuffixes = Suffix({
-            rare: [],
-            epic: []
-        });
-
-        // Initialize drinkSuffixes
-        drinkSuffixes = Suffix({
-            rare: [],
-            epic: []
-        });
     }
 
     //<OLD CODE STRUCTURE>//
